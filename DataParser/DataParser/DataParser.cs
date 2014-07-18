@@ -129,31 +129,11 @@ namespace DataParser
             if (averageFrames)
             {
                 char currentSign = dataFrames.First().Sign;
-                List<Frame> tempList = new List<Frame>();
                 List<Frame> averagedFrames = new List<Frame>();
 
-                // Get iterator for frames of the current sign
-                IEnumerator<Frame> frameIter = dataFrames.Where(f => f.Sign.Equals(currentSign)).GetEnumerator();
-                int i = 0;
-                while (frameIter.MoveNext())
-                {
-                    tempList.Add(frameIter.Current);
-                    i++;
-
-                    if (i == averagingSize)
-                    {
-                        // If we have five frames
-                        averagedFrames.Add(tempList.AverageFrames());
-                        tempList.Clear();
-                        i = 0;
-                    }
-                }
-
-                // If there are any un averaged frames average them now
-                if (tempList.Count > 0)
-                {
-                    averagedFrames.Add(tempList.AverageFrames());
-                }
+                // Get frames of the current sign
+                IEnumerable<Frame> currentSignFrames = dataFrames.Where(f => f.Sign.Equals(currentSign));
+                averagedFrames.AddRange(currentSignFrames.MovingAverageFrames(averagingSize));
 
                 return averagedFrames;
             }

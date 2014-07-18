@@ -39,14 +39,14 @@
             int j = 0;
             for (int i = 0; i < inputPaths.Count; i++)
             {
-                using (StreamWriter file = new System.IO.StreamWriter(outputPaths[j]))
+                using (StreamWriter file = new StreamWriter(outputPaths[j]))
                 {
                     DataParser parser = new DataParser(inputPaths[i]);
                     while (parser.MoveToNextLine())
                     {
                         // While the line is not empty
                         JavaScriptSerializer serializer = new JavaScriptSerializer();
-                        IEnumerable<Frame> frames = parser.GetDataFrames();
+                        IEnumerable<Frame> frames = parser.GetDataFrames(); // Call GetDataFrames with parameters to us a moving average
                         foreach (Frame frame in frames)
                         {
                             // All attributes that will be exported to JSON.

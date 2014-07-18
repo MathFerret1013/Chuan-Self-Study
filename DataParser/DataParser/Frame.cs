@@ -29,6 +29,7 @@
 
             // Create palm
             this.Palm = new Palm(DataParser.ParseDataString(splits[0]));
+            this.Fingers = new List<Finger>();
 
             // Create fingers
             for (int i = 1; i <= 10; i = i + 2)

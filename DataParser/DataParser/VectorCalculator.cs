@@ -160,6 +160,36 @@
         }
 
         /// <summary>
+        /// Averages frames with a moving average.
+        /// </summary>
+        /// <returns>List of frames calculated with a moving average.</returns>
+        public static IEnumerable<Frame> MovingAverageFrames(this IEnumerable<Frame> frames, int windowSize)
+        {
+            List<Frame> returnList = new List<Frame>();
+            
+            // Copy to a list to prevent multiple enumerations.
+            List<Frame> localList = frames.ToList();
+
+            if (localList.Count < windowSize)
+            {
+                // The window size must be less than the number of frames
+                throw new ArgumentOutOfRangeException("windowSize");
+            }
+
+            int upperbound = localList.Count() - (windowSize + 1);
+
+            for (int i = 0; i < upperbound; i++)
+            {
+                // Skip offsets from start of the list by i.
+                // Take then returns the specified number of elements
+                Frame singleAveragedFrame = localList.Skip(i).Take(windowSize).AverageFrames();
+                returnList.Add(singleAveragedFrame);
+            }
+
+            return returnList;
+        }
+
+        /// <summary>
         /// Takes a list of data frames and returns a single data frame for each each non array 
         /// property is the average of the property across all data frames in the list.
         /// </summary>
@@ -169,7 +199,7 @@
         /// <returns>
         /// A single averaged frame.
         /// </returns>
-        public static Frame AverageFrames(this IEnumerable<Frame> unaveragedFrames)
+        private static Frame AverageFrames(this IEnumerable<Frame> unaveragedFrames)
         {
             // Copy to a list to prevent multiple enumerations.
             List<Frame> frames = unaveragedFrames.ToList();
