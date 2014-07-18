@@ -1,10 +1,17 @@
+# Packages
 library(rjson)
 library(plyr)
 library(class)
 library(kernlab)
 
+dataSet <- "1"
+c("A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z")
+
+
+
+
 # Import Training data from JSON file
-path <- "C:\\Users\\Eric\\Dropbox\\SVN_FILES\\School Projects\\Chuan Self Study\\Sample Data\\TrainingData.json"
+path <- paste("C:\\Projects\\School Projects\\Chuan-Self-Study\\Sample Data\\TrainingData", dataSet, ".json", sep="") 
 c <- file(path, "r")
 l <- readLines(c, -1L)
 json <- lapply(X=l, fromJSON)
@@ -19,7 +26,7 @@ TrainingData <- rbind.fill(myList)
 TrainingData$Sign <- factor(TrainingData$Sign, levels = c("A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"))
 
 # Import Test data from JSON file
-path <- "C:\\Users\\Eric\\Dropbox\\SVN_FILES\\School Projects\\Chuan Self Study\\Sample Data\\TestData.json"
+path <- paste("C:\\Projects\\School Projects\\Chuan-Self-Study\\Sample Data\\TestData", dataSet, ".json", sep="")
 c <- file(path, "r")
 l <- readLines(c, -1L)
 json <- lapply(X=l, fromJSON)
@@ -33,7 +40,7 @@ for(i in 1:length(json))
 TestData <- rbind.fill(myList)
 TestData$Sign <- factor(TestData$Sign, levels = c("A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"))
 
-svn_classifier <- ksvm(Sign ~ ., data = TrainingData, kernel = "anovadot", C = 2)
+svn_classifier <- ksvm(Sign ~ ., data = TrainingData, kernel = "rbfdot")
 svn_predictions <- predict(svn_classifier, TestData)
 
 crossTable <- table(svn_predictions, TestData$Sign)
